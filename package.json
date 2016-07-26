@@ -5,9 +5,18 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/tape 'test/**/*.js' | ./node_modules/.bin/tap-spec",
+    "clearcache": "./node_modules/.bin/rimraf /tmp/node-proxy/*"
   },
-  "keywords": ["Node.js"],
+  "keywords": [
+    "Node.js"
+  ],
   "author": "Yurii Bodarev",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "request": "^2.74.0",
+    "rimraf": "^2.5.4",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
+  }
 }

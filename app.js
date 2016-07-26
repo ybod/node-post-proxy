@@ -1,8 +1,7 @@
 'use strict'
 const http = require('http');
-//const proxy = require('./proxy')
-
-const PORT = 52000;
+const config = require('./config');
+const proxy = require('./proxy');
 
 function handleRequest(request, response){
   if (request.method == 'POST') {
@@ -13,19 +12,17 @@ function handleRequest(request, response){
       .on('error', err => console.error(err))
       .on('data', chunk => data.push(chunk))
       .on('end', () => {
-        const body = Buffer.concat(data).toString();
+        const responseBody = proxy(url, Buffer.concat(data).toString(), config.tmp);
 
         response.writeHead(200, {
-          'Content-Length': Buffer.byteLength(body),
+          'Content-Length': Buffer.byteLength(responseBody),
           'Content-Type': 'text/plain' }
         );
 
-        response.end(body);
+        response.end(responseBody);
       });
-
-
   } else {
-    const errMsg = 'Only POST requests can be processed by this App!';
+    const errMsg = 'Only POST request can be processed by this App!';
 
     response.writeHead(405, {
       'Allow': 'POST',
@@ -39,6 +36,6 @@ function handleRequest(request, response){
 
 const server = http.createServer(handleRequest);
 
-server.listen(PORT, function(){
-  console.log("Server listening on: http://localhost:%s", PORT);
+server.listen(config.port, function(){
+  console.log(`Server listening on: http://localhost:${config.port}`);
 });
