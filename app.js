@@ -12,7 +12,7 @@ function handleRequest(request, response){
       .on('error', err => console.error(err))
       .on('data', chunk => data.push(chunk))
       .on('end', () => {
-        const responseBody = proxy(url, Buffer.concat(data).toString(), config.tmp);
+        const responseBody = proxy.processRequest(url, Buffer.concat(data).toString(), config.tmp);
 
         response.writeHead(200, {
           'Content-Length': Buffer.byteLength(responseBody),

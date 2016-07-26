@@ -16,6 +16,7 @@
   "devDependencies": {
     "request": "^2.74.0",
     "rimraf": "^2.5.4",
+    "superagent": "^2.1.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
   }

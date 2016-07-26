@@ -1,3 +1,4 @@
+'use strict'
 const test = require('tape');
 const fs = require('fs');
 const path = require('path');
@@ -8,12 +9,12 @@ const config = require('../config');
 const TEST_DIR = '__test__';
 
 test('generatePathFromUrl: incorrect or empty elements, whitespaces and non alphabetic symbols are removed from the path', (t) => {
-  path1 = '/path/to/some/resource';
-  path2 = '/Path/To/Some/Resource/';
-  path3 = '/1234/ъ!-=ё/some-path/ /';
-  path4 = '/../../somefilename';
-  path5 = '';
-  path6 = '//';
+  const path1 = '/path/to/some/resource';
+  const path2 = '/Path/To/Some/Resource/';
+  const path3 = '/1234/ъ!-=ё/some-path/ /';
+  const path4 = '/../../somefilename';
+  const path5 = '';
+  const path6 = '//';
 
   t.equal(proxy.generatePathFromUrl(path1), '/path/to/some/resource.node-proxy.cache');
   t.equal(proxy.generatePathFromUrl(path2), '/path/to/some/resource.node-proxy.cache');
@@ -30,7 +31,6 @@ test('mkDir: creating a set of nested directories recursively', (t) => {
   proxy.mkDir(testPath);
   t.ok(fs.statSync(testPath).isDirectory());
 
-  rimraf.sync(path.join(config.tmp, TEST_DIR + '/*'));
   t.end();
 });
 
@@ -45,10 +45,8 @@ test('processFile: create non-existent file, returns content of existing file', 
   t.equal(cached_content, 'TEST BODY CONTENTS');
   t.equal(fs.readFileSync(testPath, 'utf8'), 'NEW BODY CONTENTS');
 
-  rimraf.sync(path.join(config.tmp, TEST_DIR + '/*'));
   t.end();
 });
-
 
 test('processRequest: caches body contents into a file and returns previously cached content', (t) => {
   const reqUrl = TEST_DIR + '/request/path/lorem';
@@ -63,6 +61,7 @@ test('processRequest: caches body contents into a file and returns previously ca
   t.equal(proxy.processRequest(reqUrl, body3, config.tmp), '');
   t.equal(proxy.processRequest(reqUrl, '', config.tmp), body3);
 
-  rimraf.sync(path.join(config.tmp, TEST_DIR + '/*'));
   t.end();
 });
+
+test.onFinish(() => rimraf.sync(path.join(config.tmp, TEST_DIR + '/*')));
